@@ -11,7 +11,14 @@ document.addEventListener('DOMContentLoaded', () => {
     downloadBtn.addEventListener('click', (e) => {
         e.preventDefault();
         createParticleBurst(e.clientX, e.clientY);
-        simulateDownload();
+        
+        // Direct file download
+        const link = document.createElement('a');
+        link.href = 'timeware.zip';
+        link.download = 'timeware.zip';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
     });
 
     // Create animated particle effect
@@ -121,57 +128,4 @@ document.addEventListener('DOMContentLoaded', () => {
         }).onfinish = () => ripple.remove();
     }
 
-    // Download simulation with progress
-    function simulateDownload() {
-        downloadBtn.disabled = true;
-        const originalText = downloadBtn.innerHTML;
-        let progress = 0;
-        
-        downloadBtn.innerHTML = `
-            <div class="download-progress">
-                <div class="progress-bar" style="width: ${progress}%"></div>
-                <span>Initializing... ${progress}%</span>
-            </div>
-        `;
-
-        const interval = setInterval(() => {
-            progress += Math.random() * 10;
-            if(progress >= 100) {
-                clearInterval(interval);
-                downloadBtn.innerHTML = originalText;
-                downloadBtn.disabled = false;
-                showDownloadComplete();
-            }
-            
-            const progressBar = downloadBtn.querySelector('.progress-bar');
-            const progressText = downloadBtn.querySelector('span');
-            if(progressBar && progressText) {
-                progressBar.style.width = `${progress}%`;
-                progressText.textContent = `Downloading... ${Math.min(100, Math.floor(progress))}%`;
-            }
-        }, 200);
-    }
-
-    function showDownloadComplete() {
-        const completeMsg = document.createElement('div');
-        completeMsg.className = 'download-complete';
-        completeMsg.innerHTML = `
-            <i class="fas fa-check-circle"></i>
-            Download complete! File verified successfully.
-        `;
-    document.body.appendChild(completeMsg);
-
-    // Trigger actual file download
-    const downloadLink = document.createElement('a');
-    downloadLink.href = 'timeware.zip';
-    downloadLink.download = 'timeware.zip';
-    document.body.appendChild(downloadLink);
-    downloadLink.click();
-    document.body.removeChild(downloadLink);
-
-    setTimeout(() => {
-            completeMsg.style.opacity = '0';
-            setTimeout(() => completeMsg.remove(), 1000);
-        }, 3000);
-    }
 });
