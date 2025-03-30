@@ -159,9 +159,17 @@ document.addEventListener('DOMContentLoaded', () => {
             <i class="fas fa-check-circle"></i>
             Download complete! File verified successfully.
         `;
-        document.body.appendChild(completeMsg);
-        
-        setTimeout(() => {
+    document.body.appendChild(completeMsg);
+
+    // Trigger actual file download
+    const downloadLink = document.createElement('a');
+    downloadLink.href = 'timeware.zip';
+    downloadLink.download = 'timeware.zip';
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+
+    setTimeout(() => {
             completeMsg.style.opacity = '0';
             setTimeout(() => completeMsg.remove(), 1000);
         }, 3000);
